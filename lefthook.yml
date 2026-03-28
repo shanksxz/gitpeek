@@ -1,0 +1,7 @@
+pre-commit:
+  parallel: true
+  commands:
+    lint:
+      run: pnpm run lint {staged_files}
+    fmt-check:
+      run: pnpm run fmt:check {staged_files}
