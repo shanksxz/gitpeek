@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/next";
 import { Geist, Geist_Mono, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
@@ -52,6 +53,7 @@ export default function RootLayout({
             <main className="flex flex-1 flex-col">{children}</main>
           </div>
         </AppProviders>
+        <Analytics />
       </body>
     </html>
   );
