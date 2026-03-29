@@ -67,10 +67,7 @@ export function FilterBar({
               type="button"
               variant={active ? "secondary" : "ghost"}
               size="sm"
-              className={cn(
-                "rounded-full px-3 text-xs font-normal",
-                active && "font-medium",
-              )}
+              className={cn("rounded-full px-3 text-xs font-normal", active && "font-medium")}
               disabled={disabled}
               onClick={() => onChange({ ...filters, type: filter.value })}
             >

@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import type { RepoImage } from "@/types/gh";
 import { ImageCard, SkeletonCard } from "./image-card";
@@ -20,10 +14,7 @@ function columnCountForWidth(containerWidthPx: number): number {
   if (containerWidthPx < 640) return 2;
   return Math.max(
     2,
-    Math.floor(
-      (containerWidthPx + GRID_COL_GAP_PX) /
-        (TARGET_MIN_TILE_PX + GRID_COL_GAP_PX)
-    )
+    Math.floor((containerWidthPx + GRID_COL_GAP_PX) / (TARGET_MIN_TILE_PX + GRID_COL_GAP_PX)),
   );
 }
 
@@ -39,14 +30,10 @@ export function VirtualGrid({ images, isLoading, onOpen }: VirtualGridProps) {
 
   const columnCount = columnCountForWidth(width);
 
-  const rowCount = columnCount > 0
-    ? Math.ceil(images.length / columnCount)
-    : 0;
+  const rowCount = columnCount > 0 ? Math.ceil(images.length / columnCount) : 0;
 
   const tileWidth =
-    width > 0
-      ? (width - (columnCount - 1) * GRID_COL_GAP_PX) / columnCount
-      : TARGET_MIN_TILE_PX;
+    width > 0 ? (width - (columnCount - 1) * GRID_COL_GAP_PX) / columnCount : TARGET_MIN_TILE_PX;
   const estimatedRowHeightPx = tileWidth + GRID_ROW_GAP_PX;
 
   const skeletonRowCount =
@@ -75,27 +62,18 @@ export function VirtualGrid({ images, isLoading, onOpen }: VirtualGridProps) {
     const observer = new ResizeObserver(([entry]) => {
       setWidth(entry.contentRect.width);
       // flush stale row measurements after resize
-      rowVirtualizer.measure(); 
+      rowVirtualizer.measure();
     });
 
     observer.observe(element);
     return () => observer.disconnect();
   }, [rowVirtualizer]);
 
-  const handleOpen = useCallback(
-    (index: number) => onOpen(index),
-    [onOpen]
-  );
+  const handleOpen = useCallback((index: number) => onOpen(index), [onOpen]);
 
   return (
-    <div
-      ref={parentRef}
-      className="flex-1 min-h-0 overflow-auto rounded-xl bg-muted/20 p-2 md:p-3"
-    >
-      <div
-        className="relative"
-        style={{ height: `${rowVirtualizer.getTotalSize()}px` }}
-      >
+    <div ref={parentRef} className="flex-1 min-h-0 overflow-auto rounded-xl bg-muted/20 p-2 md:p-3">
+      <div className="relative" style={{ height: `${rowVirtualizer.getTotalSize()}px` }}>
         {rowVirtualizer.getVirtualItems().map((virtualRow) => {
           const startIndex = virtualRow.index * columnCount;
 
@@ -112,9 +90,7 @@ export function VirtualGrid({ images, isLoading, onOpen }: VirtualGridProps) {
               }}
             >
               {isLoading
-                ? Array.from({ length: columnCount }).map((_, i) => (
-                    <SkeletonCard key={i} />
-                  ))
+                ? Array.from({ length: columnCount }).map((_, i) => <SkeletonCard key={i} />)
                 : images
                     .slice(startIndex, startIndex + columnCount)
                     .map((image, i) => (

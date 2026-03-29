@@ -17,9 +17,8 @@ const urlSchema = z.object({
       .string()
       .min(1, "Please enter a GitHub repository URL")
       .refine((val) => parseGithubRepoUrl(val) !== null, {
-        message:
-          "Use a public GitHub repo URL like https://github.com/owner/repo or /tree/branch.",
-      })
+        message: "Use a public GitHub repo URL like https://github.com/owner/repo or /tree/branch.",
+      }),
   ),
 });
 
@@ -81,9 +80,7 @@ export function UrlInput() {
           <ArrowRight className="size-4" data-icon="inline-end" />
         </Button>
       </div>
-      {errors.url ? (
-        <p className="mt-2 text-sm text-destructive">{errors.url.message}</p>
-      ) : null}
+      {errors.url ? <p className="mt-2 text-sm text-destructive">{errors.url.message}</p> : null}
     </form>
   );
 }

@@ -6,7 +6,7 @@ import { Header } from "@/components/layouts/app-header";
 import { AppProviders } from "@/providers/app-providers";
 import { siteConfig } from "@/config/site";
 
-const jetbrainsMono = JetBrains_Mono({ subsets: ['latin'], variable: '--font-mono' });
+const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono" });
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,14 +33,23 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning className={cn("h-full", "antialiased", geistSans.variable, geistMono.variable, "font-mono", jetbrainsMono.variable)}>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={cn(
+        "h-full",
+        "antialiased",
+        geistSans.variable,
+        geistMono.variable,
+        "font-mono",
+        jetbrainsMono.variable,
+      )}
+    >
       <body className="min-h-dvh bg-background text-foreground">
         <AppProviders>
           <div className="flex min-h-dvh flex-col">
             <Header />
-            <main className="flex flex-1 flex-col">
-              {children}
-            </main>
+            <main className="flex flex-1 flex-col">{children}</main>
           </div>
         </AppProviders>
       </body>

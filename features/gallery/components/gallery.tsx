@@ -13,9 +13,7 @@ import { GalleryLightbox } from "./gallery-lightbox";
 import { EmptyState, ErrorBanner } from "./gallery-feedback";
 import { VirtualGrid } from "./virtual-grid";
 
-export function Gallery({ repo }: {
-  repo: ParsedGithubUrl;
-}) {
+export function Gallery({ repo }: { repo: ParsedGithubUrl }) {
   const [filters, setFilters] = useState<ImageFilterState>(DEFAULT_FILTERS);
   const [activeImageId, setActiveImageId] = useState<string | null>(null);
 
@@ -39,10 +37,11 @@ export function Gallery({ repo }: {
     filters.search.trim().length > 0 ||
     filters.sort !== "path";
 
-  const branchLabel = repoQuery.data?.branch ?? (repoQuery.isFetching ? "Loading branch…" : repo.branch ?? "Unknown");
+  const branchLabel =
+    repoQuery.data?.branch ??
+    (repoQuery.isFetching ? "Loading branch…" : (repo.branch ?? "Unknown"));
 
-  const treeError =
-    repoQuery.error instanceof RepoTreeError ? repoQuery.error : null;
+  const treeError = repoQuery.error instanceof RepoTreeError ? repoQuery.error : null;
 
   return (
     <section className="mx-auto flex min-h-0 w-full max-w-6xl flex-1 flex-col gap-8 px-4 py-8 md:py-10">
@@ -53,7 +52,7 @@ export function Gallery({ repo }: {
             <span className="text-muted-foreground">/</span>
             <span>{repo.repo}</span>
           </h1>
-          <span className="rounded-full bg-muted/80 px-2.5 py-0.5 text-xs font-medium text-muted-foreground">
+          <span className="rounded-full border border-red-500/25 bg-red-500/10 px-2.5 py-0.5 text-xs font-medium text-red-600 dark:text-red-300">
             {branchLabel}
           </span>
         </div>

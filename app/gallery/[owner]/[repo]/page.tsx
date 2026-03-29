@@ -1,6 +1,9 @@
 import { Gallery } from "@/features/gallery";
 
-export default async function Page({ params, searchParams }: {
+export default async function Page({
+  params,
+  searchParams,
+}: {
   params: Promise<{ owner: string; repo: string }>;
   searchParams: Promise<{ branch?: string }>;
 }) {
@@ -10,7 +13,5 @@ export default async function Page({ params, searchParams }: {
     ? `https://github.com/${owner}/${repo}/tree/${branch}`
     : `https://github.com/${owner}/${repo}`;
 
-  return (
-    <Gallery repo={{ owner, repo, branch, sourceUrl }} />
-  );
+  return <Gallery repo={{ owner, repo, branch, sourceUrl }} />;
 }

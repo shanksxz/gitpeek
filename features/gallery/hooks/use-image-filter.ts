@@ -36,9 +36,7 @@ export function useImageFilter(images: RepoImage[], filters: ImageFilterState) {
     let filtered = images;
 
     if (filters.type !== "all") {
-      filtered = filtered.filter((img) =>
-        extensionMatchesFilter(filters.type, img.extension),
-      );
+      filtered = filtered.filter((img) => extensionMatchesFilter(filters.type, img.extension));
     }
 
     if (filters.folder !== "all") {
@@ -48,8 +46,7 @@ export function useImageFilter(images: RepoImage[], filters: ImageFilterState) {
     const q = filters.search.trim().toLowerCase();
     if (q) {
       filtered = filtered.filter(
-        (img) =>
-          img.name.toLowerCase().includes(q) || img.path.toLowerCase().includes(q),
+        (img) => img.name.toLowerCase().includes(q) || img.path.toLowerCase().includes(q),
       );
     }
 

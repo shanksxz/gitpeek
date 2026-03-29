@@ -1,10 +1,6 @@
 import axios, { HttpStatusCode } from "axios";
 
-import type {
-  GithubRepoResponse,
-  GithubTreeResponse,
-  ParsedGithubUrl,
-} from "@/types/gh";
+import type { GithubRepoResponse, GithubTreeResponse, ParsedGithubUrl } from "@/types/gh";
 
 const GITHUB_API_BASE = "https://api.github.com";
 
@@ -98,7 +94,7 @@ export async function fetchGithubTree({
   repo: ParsedGithubUrl;
   signal?: AbortSignal;
 }): Promise<RepoTreeResult> {
-  const branch = repo.branch ?? await fetchDefaultBranch({ repo, signal });
+  const branch = repo.branch ?? (await fetchDefaultBranch({ repo, signal }));
   const payload = await fetchTreeForBranch({
     owner: repo.owner,
     repo: repo.repo,

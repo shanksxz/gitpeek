@@ -27,18 +27,13 @@ interface LightboxProps {
 }
 
 enum ImageState {
+  loading = "loading",
   downloading = "downloading",
   ready = "ready",
   error = "error",
 }
 
-export function ImageLightboxDialog({
-  image,
-  images,
-  onClose,
-  onPrevious,
-  onNext,
-}: LightboxProps) {
+export function ImageLightboxDialog({ image, images, onClose, onPrevious, onNext }: LightboxProps) {
   const [imageState, setImageState] = useState(ImageState.ready);
 
   useHotkeys(
@@ -50,7 +45,7 @@ export function ImageLightboxDialog({
   );
 
   useEffect(() => {
-    setImageState(ImageState.ready);
+    setImageState(ImageState.loading);
   }, [image?.id]);
 
   if (!image) return null;
@@ -83,7 +78,10 @@ export function ImageLightboxDialog({
 
   return (
     <Dialog open={image !== null} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="flex max-h-[92dvh] w-[min(96vw,72rem)] flex-col overflow-hidden border-border bg-card p-0 sm:max-w-[72rem]">
+      <DialogContent
+        showCloseButton={false}
+        className="flex max-h-[92dvh] w-[min(96vw,72rem)] flex-col overflow-hidden border-border bg-card p-0 sm:max-w-[72rem]"
+      >
         <DialogHeader className="sr-only">
           <DialogTitle>{image.name}</DialogTitle>
           <DialogDescription>
@@ -93,20 +91,31 @@ export function ImageLightboxDialog({
 
         <div className="relative min-h-[min(55vh,560px)] w-full flex-1 bg-black/20 md:min-h-[min(60vh,640px)]">
           {imageState !== ImageState.error ? (
-            <Image
-              src={image.rawUrl}
-              alt={image.name}
-              fill
-              sizes="(max-width: 896px) 100vw, 896px"
-              className="object-contain"
-              priority
-              onError={() => setImageState(ImageState.error)}
-            />
-          ) : (
+            <>
+              <Image
+                src={image.rawUrl}
+                alt={image.name}
+                fill
+                sizes="(max-width: 896px) 100vw, 896px"
+                className="object-contain"
+                priority
+                onLoad={() => setImageState(ImageState.ready)}
+                onError={() => setImageState(ImageState.error)}
+              />
+            </>
+          ) : imageState === ImageState.error ? (
             <div className="flex h-full min-h-[12rem] items-center justify-center text-muted-foreground">
               <span>Unable to load image</span>
             </div>
-          )}
+          ) : null}
+
+          {imageState === ImageState.loading ? (
+            <div className="absolute inset-0 flex items-center justify-center bg-black/20">
+              <div className="rounded-full bg-background/90 p-3 text-foreground shadow-sm">
+                <Loader2 className="h-5 w-5 animate-spin" aria-hidden />
+              </div>
+            </div>
+          ) : null}
         </div>
 
         <div className="flex flex-col gap-4 border-t border-border p-4 sm:flex-row sm:items-center sm:justify-between">
@@ -135,9 +144,7 @@ export function ImageLightboxDialog({
           </div>
 
           <div className="min-w-0 flex-1 text-left sm:text-center">
-            <h3 className="truncate text-sm font-semibold text-foreground">
-              {image.name}
-            </h3>
+            <h3 className="truncate text-sm font-semibold text-foreground">{image.name}</h3>
             <p className="mt-1 text-xs text-muted-foreground">
               {formatBytes(image.size)} • {image.extension.toUpperCase()}
             </p>

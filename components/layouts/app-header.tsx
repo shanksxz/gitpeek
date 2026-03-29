@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useTheme } from "next-themes";
 import { Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -16,7 +17,9 @@ export function Header() {
   return (
     <header className="sticky top-0 z-20 border-b border-border/60 bg-background/80 backdrop-blur">
       <div className="mx-auto flex h-14 w-full max-w-6xl items-center justify-between px-4">
-        <span className="font-semibold text-lg">gitpeek</span>
+        <Link href="/" className="font-semibold text-lg transition-opacity hover:opacity-80">
+          gitpeek
+        </Link>
         {mounted ? (
           <Button
             variant="ghost"

@@ -14,7 +14,8 @@ export default function Home() {
             See every image in any repo
           </h1>
           <p className="mt-4 max-w-md text-pretty text-sm leading-relaxed text-muted-foreground">
-            Paste a GitHub URL to get an instant gallery of every image — no folder clicking, no GitHub UI.
+            Paste a GitHub URL to get an instant gallery of every image — no folder clicking, no
+            GitHub UI.
           </p>
         </div>
 

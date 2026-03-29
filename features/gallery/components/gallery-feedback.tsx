@@ -23,13 +23,7 @@ export function ErrorBanner({
   );
 }
 
-export function EmptyState({
-  hasRepo,
-  hasFilters,
-}: {
-  hasRepo: boolean;
-  hasFilters: boolean;
-}) {
+export function EmptyState({ hasRepo, hasFilters }: { hasRepo: boolean; hasFilters: boolean }) {
   return (
     <div className="flex min-h-[min(68vh,720px)] flex-col items-center justify-center rounded-xl border border-dashed border-border bg-muted/10 px-6 py-16 text-center dark:bg-muted/5">
       <p className="text-lg font-medium text-foreground">

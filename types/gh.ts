@@ -35,7 +35,17 @@ export interface RepoImage {
   rawUrl: string;
 }
 
-export type ImageTypeFilter = "all" | "png" | "jpg" | "jpeg" | "gif" | "svg" | "webp" | "avif" | "bmp" | "ico";
+export type ImageTypeFilter =
+  | "all"
+  | "png"
+  | "jpg"
+  | "jpeg"
+  | "gif"
+  | "svg"
+  | "webp"
+  | "avif"
+  | "bmp"
+  | "ico";
 
 export type ImageSort = "path" | "name" | "size-desc" | "size-asc";
 

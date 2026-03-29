@@ -8,7 +8,12 @@ import { getFolderPath, getExtension } from "@/utils/format";
 import { getRawUrl } from "@/utils/url";
 import { isImage } from "@/utils/image";
 
-function mapTreeToImages(owner: string, repo: string, branch: string, tree: GithubTreeItem[]): RepoImage[] {
+function mapTreeToImages(
+  owner: string,
+  repo: string,
+  branch: string,
+  tree: GithubTreeItem[],
+): RepoImage[] {
   const images: RepoImage[] = [];
 
   for (const item of tree) {
