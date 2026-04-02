@@ -13,7 +13,17 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
-import type { ImageFilterState, ImageTypeFilter } from "@/types/gh";
+import { imageTypeFilters, imageSortOptions } from "@/features/gallery/lib/filter-parsers";
+
+type ImageTypeFilter = (typeof imageTypeFilters)[number];
+type ImageSort = (typeof imageSortOptions)[number];
+
+interface GalleryFilters {
+  type: ImageTypeFilter;
+  folder: string;
+  search: string;
+  sort: ImageSort;
+}
 
 const TYPE_FILTERS: Array<{ label: string; value: ImageTypeFilter }> = [
   { label: "All", value: "all" },
@@ -25,7 +35,7 @@ const TYPE_FILTERS: Array<{ label: string; value: ImageTypeFilter }> = [
 ];
 
 const SORT_OPTIONS: Array<{
-  value: ImageFilterState["sort"];
+  value: ImageSort;
   label: string;
 }> = [
   { value: "path", label: "Sort: Path" },
@@ -40,21 +50,21 @@ const selectTriggerClass =
 interface FilterBarProps {
   disabled?: boolean;
   loading?: boolean;
-  filters: ImageFilterState;
+  filters: GalleryFilters;
+  setFilters: (update: Partial<GalleryFilters>) => void;
   folders: string[];
   visibleCount: number;
   totalCount: number;
-  onChange: (next: ImageFilterState) => void;
 }
 
 export function FilterBar({
   disabled = false,
   loading = false,
   filters,
+  setFilters,
   folders,
   visibleCount,
   totalCount,
-  onChange,
 }: FilterBarProps) {
   return (
     <section className="grid gap-5">
@@ -69,7 +79,7 @@ export function FilterBar({
               size="sm"
               className={cn("rounded-full px-3 text-xs font-normal", active && "font-medium")}
               disabled={disabled}
-              onClick={() => onChange({ ...filters, type: filter.value })}
+              onClick={() => setFilters({ type: filter.value })}
             >
               {filter.label}
             </Button>
@@ -81,7 +91,7 @@ export function FilterBar({
           <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             value={filters.search}
-            onChange={(event) => onChange({ ...filters, search: event.target.value })}
+            onChange={(event) => setFilters({ search: event.target.value || "" })}
             placeholder="Search by filename or path"
             aria-label="Search images"
             disabled={disabled}
@@ -90,7 +100,7 @@ export function FilterBar({
         </label>
         <Select
           value={filters.folder}
-          onValueChange={(folder) => onChange({ ...filters, folder })}
+          onValueChange={(folder) => setFilters({ folder })}
           disabled={disabled}
         >
           <SelectTrigger aria-label="Filter by folder" className={selectTriggerClass}>
@@ -109,12 +119,7 @@ export function FilterBar({
         </Select>
         <Select
           value={filters.sort}
-          onValueChange={(sort) =>
-            onChange({
-              ...filters,
-              sort: sort as ImageFilterState["sort"],
-            })
-          }
+          onValueChange={(sort) => setFilters({ sort: sort as ImageSort })}
           disabled={disabled}
         >
           <SelectTrigger aria-label="Sort images" className={selectTriggerClass}>
