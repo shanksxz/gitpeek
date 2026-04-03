@@ -1,5 +1,3 @@
-"use client";
-
 import { UrlInput } from "@/features/home/url-input";
 
 export default function Home() {

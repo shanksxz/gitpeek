@@ -1,12 +1,13 @@
 "use client";
 
-import { startTransition, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { useQueryStates } from "nuqs";
 
 import { RepoTreeError } from "@/features/github/lib/fetch-repo-tree";
 import { useImageFilter } from "@/features/gallery/hooks/use-image-filter";
 import { useRepoTree } from "@/features/gallery/hooks/use-repo-tree";
-import { DEFAULT_FILTERS } from "@/features/gallery/lib/default-filters";
-import type { ImageFilterState, ParsedGithubUrl } from "@/types/gh";
+import { filterParsers } from "@/features/gallery/lib/filter-parsers";
+import type { ParsedGithubUrl } from "@/types/gh";
 
 import { FilterBar } from "./filter-bar";
 import { GalleryLightbox } from "./gallery-lightbox";
@@ -14,15 +15,11 @@ import { EmptyState, ErrorBanner } from "./gallery-feedback";
 import { VirtualGrid } from "./virtual-grid";
 
 export function Gallery({ repo }: { repo: ParsedGithubUrl }) {
-  const [filters, setFilters] = useState<ImageFilterState>(DEFAULT_FILTERS);
+  const [filters, setFilters] = useQueryStates(filterParsers);
   const [activeImageId, setActiveImageId] = useState<string | null>(null);
 
   const repoQuery = useRepoTree(repo);
   const { filteredImages, folders } = useImageFilter(repoQuery.images, filters);
-
-  useEffect(() => {
-    setFilters(DEFAULT_FILTERS);
-  }, [repo.owner, repo.repo, repo.branch]);
 
   useEffect(() => {
     if (!activeImageId) return;
@@ -101,10 +98,10 @@ export function Gallery({ repo }: { repo: ParsedGithubUrl }) {
           disabled={repoQuery.isFetching}
           loading={repoQuery.isFetching}
           filters={filters}
+          setFilters={setFilters}
           folders={folders}
           visibleCount={filteredImages.length}
           totalCount={repoQuery.images.length}
-          onChange={(next) => startTransition(() => setFilters(next))}
         />
 
         {repoQuery.isFetching ? (

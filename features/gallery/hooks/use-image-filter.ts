@@ -31,26 +31,23 @@ function sortImages(images: RepoImage[], sort: ImageFilterState["sort"]): RepoIm
 
 export function useImageFilter(images: RepoImage[], filters: ImageFilterState) {
   return useMemo(() => {
-    const folders = Array.from(new Set(images.map((img) => img.folder))).sort();
-
-    let filtered = images;
-
-    if (filters.type !== "all") {
-      filtered = filtered.filter((img) => extensionMatchesFilter(filters.type, img.extension));
-    }
-
-    if (filters.folder !== "all") {
-      filtered = filtered.filter((img) => img.folder === filters.folder);
-    }
-
+    const folderSet = new Set<string>();
     const q = filters.search.trim().toLowerCase();
-    if (q) {
-      filtered = filtered.filter(
-        (img) => img.name.toLowerCase().includes(q) || img.path.toLowerCase().includes(q),
-      );
+
+    let filtered: RepoImage[] = [];
+
+    for (const img of images) {
+      folderSet.add(img.folder);
+
+      if (filters.type !== "all" && !extensionMatchesFilter(filters.type, img.extension)) continue;
+      if (filters.folder !== "all" && img.folder !== filters.folder) continue;
+      if (q && !img.name.toLowerCase().includes(q) && !img.path.toLowerCase().includes(q)) continue;
+
+      filtered.push(img);
     }
 
     const filteredImages = sortImages(filtered, filters.sort);
+    const folders = Array.from(folderSet).sort();
 
     return { filteredImages, folders };
   }, [images, filters]);
