@@ -7,6 +7,32 @@ function normalizeGithubPathname(pathname: string): string[] {
     .map((segment) => decodeURIComponent(segment));
 }
 
+function parseShorthand(input: string): ParsedGithubUrl | null {
+  const match = input.match(/^([^/\s]+)\/([^/\s@]+)(?:@(.+))?$/);
+  if (!match) return null;
+
+  const [, owner, rawRepo, branch] = match;
+  if (!owner || !rawRepo) return null;
+
+  const repo = rawRepo.replace(/\.git$/i, "");
+  if (!repo) return null;
+
+  if (branch) {
+    return {
+      owner,
+      repo,
+      branch,
+      sourceUrl: `https://github.com/${owner}/${repo}/tree/${branch}`,
+    };
+  }
+
+  return {
+    owner,
+    repo,
+    sourceUrl: `https://github.com/${owner}/${repo}`,
+  };
+}
+
 export function parseGithubRepoUrl(input: string): ParsedGithubUrl | null {
   const trimmed = input.trim();
 
@@ -16,10 +42,10 @@ export function parseGithubRepoUrl(input: string): ParsedGithubUrl | null {
   try {
     url = new URL(trimmed);
   } catch {
-    return null;
+    return parseShorthand(trimmed);
   }
 
-  if (!["http:", "https:"].includes(url.protocol)) return null;
+  if (!["http:", "https:"].includes(url.protocol)) return parseShorthand(trimmed);
   if (!["github.com", "www.github.com"].includes(url.hostname)) return null;
   if (url.search || url.hash) return null;
 

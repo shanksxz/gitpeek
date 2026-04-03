@@ -1,23 +1,11 @@
 import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next";
-import { Geist, Geist_Mono, JetBrains_Mono } from "next/font/google";
+import { Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { cn } from "@/lib/utils";
 import { Header } from "@/components/layouts/app-header";
 import { AppProviders } from "@/providers/app-providers";
 import { siteConfig } from "@/config/site";
-
-const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono" });
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+import AppFooter from "@/components/layouts/app-footer";
 
 export const metadata: Metadata = {
   title: {
@@ -28,29 +16,36 @@ export const metadata: Metadata = {
   applicationName: siteConfig.name,
 };
 
+const fontSans = Geist_Mono({
+  subsets: ["latin"],
+  variable: "--font-sans",
+});
+
+const fontSerif = Geist_Mono({
+  subsets: ["latin"],
+  variable: "--font-serif",
+});
+
+const fontMono = Geist_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+});
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      suppressHydrationWarning
-      className={cn(
-        "h-full",
-        "antialiased",
-        geistSans.variable,
-        geistMono.variable,
-        "font-mono",
-        jetbrainsMono.variable,
-      )}
-    >
-      <body className="min-h-dvh bg-background text-foreground">
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={`min-h-dvh bg-background text-foreground ${fontSans.variable} ${fontSerif.variable} ${fontMono.variable} antialiased`}
+      >
         <AppProviders>
-          <div className="flex min-h-dvh flex-col">
+          <div className="flex min-h-dvh flex-col items-center">
             <Header />
-            <main className="flex flex-1 flex-col">{children}</main>
+            <main className="flex flex-1 overflow-auto w-full">{children}</main>
+            <AppFooter />
           </div>
         </AppProviders>
         <Analytics />
