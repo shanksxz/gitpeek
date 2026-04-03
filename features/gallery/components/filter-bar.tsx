@@ -29,9 +29,13 @@ const TYPE_FILTERS: Array<{ label: string; value: ImageTypeFilter }> = [
   { label: "All", value: "all" },
   { label: "PNG", value: "png" },
   { label: "JPG", value: "jpg" },
+  { label: "JPEG", value: "jpeg" },
   { label: "GIF", value: "gif" },
   { label: "SVG", value: "svg" },
   { label: "WebP", value: "webp" },
+  { label: "AVIF", value: "avif" },
+  { label: "BMP", value: "bmp" },
+  { label: "ICO", value: "ico" },
 ];
 
 const SORT_OPTIONS: Array<{

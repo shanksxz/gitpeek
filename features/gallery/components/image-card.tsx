@@ -36,8 +36,8 @@ export function ImageCard({ image, onOpen }: ImageCardProps) {
       )}
 
       <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition-colors duration-200 group-hover:bg-black/50">
-        <div className="px-2 text-center opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-          <p className="truncate text-xs font-medium text-white">{image.name}</p>
+        <div className="w-full max-w-[90%] px-2 text-center opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+          <p className="break-all text-xs font-medium text-white">{image.name}</p>
         </div>
       </div>
 

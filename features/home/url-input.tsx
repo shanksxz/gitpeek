@@ -17,7 +17,7 @@ const urlSchema = z.object({
       .string()
       .min(1, "Please enter a GitHub repository URL")
       .refine((val) => parseGithubRepoUrl(val) !== null, {
-        message: "Use a public GitHub repo URL like https://github.com/owner/repo or /tree/branch.",
+        message: "Use owner/repo, https://github.com/owner/repo, or owner/repo@branch.",
       }),
   ),
 });
@@ -66,7 +66,7 @@ export function UrlInput() {
             assignInputRef(el);
             inputRef.current = el;
           }}
-          placeholder="https://github.com/owner/repo"
+          placeholder="owner/repo or https://github.com/owner/repo"
           aria-invalid={Boolean(errors.url)}
           aria-label="github repository url"
           className="h-11 flex-1 rounded-lg bg-muted/60 px-3 text-sm dark:bg-muted/40"

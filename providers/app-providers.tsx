@@ -12,7 +12,12 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
   return (
     <NuqsAdapter>
       <QueryClientProvider client={queryClient}>
-        <ThemeProvider attribute="class" disableTransitionOnChange storageKey="gitpeek-theme">
+        <ThemeProvider
+          attribute="class"
+          disableTransitionOnChange
+          storageKey="gitpeek-theme"
+          defaultTheme="dark"
+        >
           {children}
         </ThemeProvider>
       </QueryClientProvider>
