@@ -2,11 +2,11 @@ import { useMemo } from "react";
 
 import { useQuery } from "@tanstack/react-query";
 
+import type { RepoImage } from "@/features/gallery/types";
 import { fetchGithubTree, RepoTreeError } from "@/features/github/lib/fetch-repo-tree";
-import type { GithubTreeItem, ParsedGithubUrl, RepoImage } from "@/types/gh";
-import { getFolderPath, getExtension } from "@/utils/format";
-import { getRawUrl } from "@/utils/url";
-import { isImage } from "@/utils/image";
+import { getRawUrl } from "@/features/github/lib/get-raw-url";
+import type { GithubTreeItem, ParsedGithubUrl } from "@/features/github/types";
+import { getFolderPath, getExtension, isImagePath } from "@/features/gallery/lib/image-utils";
 
 function mapTreeToImages(
   owner: string,
@@ -17,7 +17,7 @@ function mapTreeToImages(
   const images: RepoImage[] = [];
 
   for (const item of tree) {
-    if (item.type !== "blob" || !isImage(item.path)) continue;
+    if (item.type !== "blob" || !isImagePath(item.path)) continue;
 
     images.push({
       id: item.path,

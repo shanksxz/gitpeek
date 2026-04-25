@@ -1,6 +1,10 @@
 import axios, { HttpStatusCode } from "axios";
 
-import type { GithubRepoResponse, GithubTreeResponse, ParsedGithubUrl } from "@/types/gh";
+import type {
+  GithubRepoResponse,
+  GithubTreeResponse,
+  ParsedGithubUrl,
+} from "@/features/github/types";
 
 const GITHUB_API_BASE = "https://api.github.com";
 
@@ -22,6 +26,10 @@ export interface RepoTreeResult {
   truncated: boolean;
 }
 
+interface GithubErrorResponse {
+  message?: string;
+}
+
 async function githubGet<T>(url: string, signal?: AbortSignal) {
   return axios.get<T>(url, {
     headers: {
@@ -32,12 +40,42 @@ async function githubGet<T>(url: string, signal?: AbortSignal) {
   });
 }
 
-function throwForGithubStatus(status: number, remaining?: string) {
+function isGithubRateLimit({
+  status,
+  remaining,
+  retryAfter,
+  message,
+}: {
+  status: number;
+  remaining?: string;
+  retryAfter?: string;
+  message?: string;
+}) {
+  if (status === HttpStatusCode.TooManyRequests) return true;
+  if (retryAfter) return true;
+  if (status === HttpStatusCode.Forbidden && remaining === "0") return true;
+  if (status !== HttpStatusCode.Forbidden || !message) return false;
+
+  const normalizedMessage = message.toLowerCase();
+  return normalizedMessage.includes("rate limit");
+}
+
+function throwForGithubStatus({
+  status,
+  remaining,
+  retryAfter,
+  message,
+}: {
+  status: number;
+  remaining?: string;
+  retryAfter?: string;
+  message?: string;
+}) {
   if (status === HttpStatusCode.NotFound) {
     throw new RepoTreeError("Repo or branch could not be found.", "NOT_FOUND");
   }
 
-  if (status === HttpStatusCode.Forbidden && remaining === "0") {
+  if (isGithubRateLimit({ status, remaining, retryAfter, message })) {
     throw new RepoTreeError(
       "GitHub is rate limiting requests right now. Please wait a bit and try again.",
       "RATE_LIMIT",
@@ -61,7 +99,12 @@ async function fetchDefaultBranch({
     signal,
   );
 
-  throwForGithubStatus(response.status, response.headers["x-ratelimit-remaining"]);
+  throwForGithubStatus({
+    status: response.status,
+    remaining: response.headers["x-ratelimit-remaining"],
+    retryAfter: response.headers["retry-after"],
+    message: (response.data as GithubErrorResponse | undefined)?.message,
+  });
 
   return response.data.default_branch;
 }
@@ -82,7 +125,12 @@ async function fetchTreeForBranch({
     signal,
   );
 
-  throwForGithubStatus(response.status, response.headers["x-ratelimit-remaining"]);
+  throwForGithubStatus({
+    status: response.status,
+    remaining: response.headers["x-ratelimit-remaining"],
+    retryAfter: response.headers["retry-after"],
+    message: (response.data as GithubErrorResponse | undefined)?.message,
+  });
 
   return response.data;
 }

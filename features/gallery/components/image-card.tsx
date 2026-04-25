@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 
 import { cn } from "@/lib/utils";
-import type { RepoImage } from "@/types/gh";
+import type { RepoImage } from "@/features/gallery/types";
 
 interface ImageCardProps {
   image: RepoImage;

@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useVirtualizer } from "@tanstack/react-virtual";
-import type { RepoImage } from "@/types/gh";
+import type { RepoImage } from "@/features/gallery/types";
 import { ImageCard, SkeletonCard } from "./image-card";
 
 const GRID_COL_GAP_PX = 16;

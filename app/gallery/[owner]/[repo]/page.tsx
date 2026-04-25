@@ -1,4 +1,4 @@
-import { Gallery } from "@/features/gallery";
+import { Gallery } from "@/features/gallery/components/gallery";
 
 export default async function Page({
   params,
