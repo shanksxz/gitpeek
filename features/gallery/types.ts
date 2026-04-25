@@ -29,3 +29,22 @@ export interface ImageFilterState {
   search: string;
   sort: ImageSort;
 }
+
+export type BulkDownloadState = "idle" | "downloading" | "success" | "partial" | "error";
+
+export interface BulkDownloadFailure {
+  id: string;
+  path: string;
+  reason: string;
+}
+
+export interface BulkDownloadResult {
+  requestedCount: number;
+  successCount: number;
+  failures: BulkDownloadFailure[];
+}
+
+export interface GalleryStatusMessage {
+  tone: "default" | "warning" | "error" | "success";
+  text: string;
+}
