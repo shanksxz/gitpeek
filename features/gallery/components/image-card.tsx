@@ -2,49 +2,84 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { Check } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import type { RepoImage } from "@/features/gallery/types";
 
 interface ImageCardProps {
   image: RepoImage;
+  selectionMode?: boolean;
+  selectionDisabled?: boolean;
+  selected?: boolean;
+  onToggleSelect?: () => void;
   onOpen: () => void;
 }
 
-export function ImageCard({ image, onOpen }: ImageCardProps) {
+export function ImageCard({
+  image,
+  selectionMode = false,
+  selectionDisabled = false,
+  selected = false,
+  onToggleSelect,
+  onOpen,
+}: ImageCardProps) {
   const [imageError, setImageError] = useState(false);
 
   return (
-    <button
-      type="button"
-      onClick={onOpen}
-      className="group relative aspect-square cursor-pointer overflow-hidden rounded-lg border border-border bg-muted transition-colors hover:border-accent"
-    >
-      {!imageError ? (
-        <Image
-          src={image.rawUrl}
-          alt={image.name}
-          fill
-          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
-          className="object-cover transition-transform duration-300 group-hover:scale-105"
-          onError={() => setImageError(true)}
-        />
-      ) : (
-        <div className="flex h-full w-full items-center justify-center bg-muted p-4 text-center text-xs text-muted-foreground">
-          <span>Unable to load</span>
-        </div>
-      )}
+    <div className="relative aspect-square">
+      <button
+        type="button"
+        onClick={onOpen}
+        className={cn(
+          "group relative h-full w-full cursor-pointer overflow-hidden rounded-lg border bg-muted transition-colors hover:border-accent",
+          selected ? "border-primary ring-1 ring-primary/40" : "border-border",
+        )}
+      >
+        {!imageError ? (
+          <Image
+            src={image.rawUrl}
+            alt={image.name}
+            fill
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
+            className="object-cover transition-transform duration-300 group-hover:scale-105"
+            onError={() => setImageError(true)}
+          />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center bg-muted p-4 text-center text-xs text-muted-foreground">
+            <span>Unable to load</span>
+          </div>
+        )}
 
-      <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition-colors duration-200 group-hover:bg-black/50">
-        <div className="w-full max-w-[90%] px-2 text-center opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-          <p className="break-all text-xs font-medium text-white">{image.name}</p>
+        <div className="absolute inset-0 flex items-center justify-center bg-black/0 transition-colors duration-200 group-hover:bg-black/50">
+          <div className="w-full max-w-[90%] px-2 text-center opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+            <p className="break-all text-xs font-medium text-white">{image.name}</p>
+          </div>
         </div>
-      </div>
 
-      <div className="absolute bottom-2 left-2 rounded bg-black/75 px-2 py-1 text-xs font-medium text-white">
-        {image.extension.toUpperCase()}
-      </div>
-    </button>
+        <div className="absolute bottom-2 left-2 rounded bg-black/75 px-2 py-1 text-xs font-medium text-white">
+          {image.extension.toUpperCase()}
+        </div>
+      </button>
+
+      {selectionMode ? (
+        <button
+          type="button"
+          onClick={onToggleSelect}
+          disabled={selectionDisabled}
+          aria-pressed={selected}
+          aria-label={selected ? `Deselect ${image.name}` : `Select ${image.name}`}
+          className={cn(
+            "absolute top-2 left-2 flex size-8 items-center justify-center rounded-full border shadow-sm transition-colors",
+            selected
+              ? "border-primary bg-primary text-primary-foreground"
+              : "border-border bg-background/90 text-muted-foreground hover:text-foreground",
+          )}
+        >
+          <Check className="size-4" aria-hidden />
+        </button>
+      ) : null}
+    </div>
   );
 }
 

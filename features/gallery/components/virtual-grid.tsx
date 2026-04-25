@@ -22,9 +22,21 @@ interface VirtualGridProps {
   images: RepoImage[];
   isLoading: boolean;
   onOpen: (index: number) => void;
+  selectionMode?: boolean;
+  selectionDisabled?: boolean;
+  isSelected?: (imageId: string) => boolean;
+  onToggleSelect?: (imageId: string) => void;
 }
 
-export function VirtualGrid({ images, isLoading, onOpen }: VirtualGridProps) {
+export function VirtualGrid({
+  images,
+  isLoading,
+  onOpen,
+  selectionMode = false,
+  selectionDisabled = false,
+  isSelected,
+  onToggleSelect,
+}: VirtualGridProps) {
   const parentRef = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(0);
 
@@ -97,6 +109,10 @@ export function VirtualGrid({ images, isLoading, onOpen }: VirtualGridProps) {
                       <ImageCard
                         key={image.id}
                         image={image}
+                        selectionMode={selectionMode}
+                        selectionDisabled={selectionDisabled}
+                        selected={isSelected?.(image.id) ?? false}
+                        onToggleSelect={onToggleSelect ? () => onToggleSelect(image.id) : undefined}
                         onOpen={() => handleOpen(startIndex + i)}
                       />
                     ))}

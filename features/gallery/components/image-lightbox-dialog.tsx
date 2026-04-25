@@ -15,6 +15,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { downloadBlob } from "@/features/gallery/lib/file-download";
 import { formatBytes } from "@/features/gallery/lib/image-utils";
 import type { RepoImage } from "@/features/gallery/types";
 
@@ -60,15 +61,7 @@ export function ImageLightboxDialog({ image, images, onClose, onPrevious, onNext
       const { data: blob } = await axios.get<Blob>(image.rawUrl, {
         responseType: "blob",
       });
-      const objectUrl = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = objectUrl;
-      link.download = image.name;
-      link.rel = "noopener";
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      setTimeout(() => URL.revokeObjectURL(objectUrl), 250);
+      downloadBlob(blob, image.name);
     } catch {
       window.open(image.rawUrl, "_blank", "noopener,noreferrer");
     } finally {
