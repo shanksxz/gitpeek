@@ -15,8 +15,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import type { RepoImage } from "@/types/gh";
-import { formatBytes } from "@/utils/format";
+import { formatBytes } from "@/features/gallery/lib/image-utils";
+import type { RepoImage } from "@/features/gallery/types";
 
 interface LightboxProps {
   image: RepoImage | null;

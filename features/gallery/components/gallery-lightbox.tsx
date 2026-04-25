@@ -1,7 +1,7 @@
 "use client";
 
 import { ImageLightboxDialog } from "./image-lightbox-dialog";
-import type { RepoImage } from "@/types/gh";
+import type { RepoImage } from "@/features/gallery/types";
 
 interface GalleryLightboxProps {
   images: RepoImage[];

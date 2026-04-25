@@ -4,10 +4,11 @@ import { useEffect, useState } from "react";
 import { useQueryStates } from "nuqs";
 
 import { RepoTreeError } from "@/features/github/lib/fetch-repo-tree";
+import { useDebouncedQuerySearch } from "@/features/gallery/hooks/use-debounced-query-search";
 import { useImageFilter } from "@/features/gallery/hooks/use-image-filter";
 import { useRepoTree } from "@/features/gallery/hooks/use-repo-tree";
 import { filterParsers } from "@/features/gallery/lib/filter-parsers";
-import type { ParsedGithubUrl } from "@/types/gh";
+import type { ParsedGithubUrl } from "@/features/github/types";
 
 import { FilterBar } from "./filter-bar";
 import { GalleryLightbox } from "./gallery-lightbox";
@@ -17,9 +18,23 @@ import { VirtualGrid } from "./virtual-grid";
 export function Gallery({ repo }: { repo: ParsedGithubUrl }) {
   const [filters, setFilters] = useQueryStates(filterParsers);
   const [activeImageId, setActiveImageId] = useState<string | null>(null);
-
   const repoQuery = useRepoTree(repo);
-  const { filteredImages, folders } = useImageFilter(repoQuery.images, filters);
+  const isInitialLoad = repoQuery.isPending;
+  const isRefreshing = repoQuery.isFetching && !isInitialLoad;
+  const updateFilters = (update: Partial<typeof filters>) => {
+    void setFilters(update, {
+      history: "replace",
+      scroll: false,
+    });
+  };
+  const { deferredSearch, searchInput, setSearchInput } = useDebouncedQuerySearch({
+    search: filters.search,
+    onSearchCommit: (search) => updateFilters({ search }),
+  });
+  const { filteredImages, folders } = useImageFilter(repoQuery.images, {
+    ...filters,
+    search: deferredSearch,
+  });
 
   useEffect(() => {
     if (!activeImageId) return;
@@ -31,12 +46,11 @@ export function Gallery({ repo }: { repo: ParsedGithubUrl }) {
   const hasFilters =
     filters.type !== "all" ||
     filters.folder !== "all" ||
-    filters.search.trim().length > 0 ||
+    searchInput.trim().length > 0 ||
     filters.sort !== "path";
 
   const branchLabel =
-    repoQuery.data?.branch ??
-    (repoQuery.isFetching ? "Loading branch…" : (repo.branch ?? "Unknown"));
+    repoQuery.data?.branch ?? (isInitialLoad ? "Loading branch…" : (repo.branch ?? "Unknown"));
 
   const treeError = repoQuery.error instanceof RepoTreeError ? repoQuery.error : null;
 
@@ -54,18 +68,24 @@ export function Gallery({ repo }: { repo: ParsedGithubUrl }) {
           </span>
         </div>
         <p className="text-sm text-muted-foreground">
-          {repoQuery.isFetching
+          {isInitialLoad
             ? "Scanning the repository tree…"
             : "Every image file we found in this repo."}
         </p>
         <p className="text-xs text-muted-foreground">
-          {repoQuery.isFetching ? (
+          {isInitialLoad ? (
             "…"
           ) : (
             <>
               <span className="font-medium text-foreground">{repoQuery.images.length}</span> images
               <span className="mx-2 text-border">·</span>
               <span>{repoQuery.data?.tree.length ?? 0}</span> tree objects
+              {isRefreshing ? (
+                <>
+                  <span className="mx-2 text-border">·</span>
+                  Refreshing…
+                </>
+              ) : null}
               <span className="mx-2 text-border">·</span>
               GitHub API
             </>
@@ -95,16 +115,19 @@ export function Gallery({ repo }: { repo: ParsedGithubUrl }) {
         ) : null}
 
         <FilterBar
-          disabled={repoQuery.isFetching}
-          loading={repoQuery.isFetching}
+          disabled={isInitialLoad}
+          loading={isInitialLoad}
+          refreshing={isRefreshing}
           filters={filters}
-          setFilters={setFilters}
+          searchValue={searchInput}
+          onSearchChange={setSearchInput}
+          setFilters={updateFilters}
           folders={folders}
           visibleCount={filteredImages.length}
           totalCount={repoQuery.images.length}
         />
 
-        {repoQuery.isFetching ? (
+        {isInitialLoad ? (
           <VirtualGrid images={[]} isLoading onOpen={() => undefined} />
         ) : filteredImages.length > 0 ? (
           <VirtualGrid

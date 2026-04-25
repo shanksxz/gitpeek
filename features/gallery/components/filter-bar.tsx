@@ -1,6 +1,7 @@
 "use client";
 
 import { Search } from "lucide-react";
+import type { Dispatch, SetStateAction } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -54,7 +55,10 @@ const selectTriggerClass =
 interface FilterBarProps {
   disabled?: boolean;
   loading?: boolean;
+  refreshing?: boolean;
   filters: GalleryFilters;
+  searchValue: string;
+  onSearchChange: Dispatch<SetStateAction<string>>;
   setFilters: (update: Partial<GalleryFilters>) => void;
   folders: string[];
   visibleCount: number;
@@ -64,7 +68,10 @@ interface FilterBarProps {
 export function FilterBar({
   disabled = false,
   loading = false,
+  refreshing = false,
   filters,
+  searchValue,
+  onSearchChange,
   setFilters,
   folders,
   visibleCount,
@@ -94,8 +101,8 @@ export function FilterBar({
         <label className="relative block min-w-0">
           <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
-            value={filters.search}
-            onChange={(event) => setFilters({ search: event.target.value || "" })}
+            value={searchValue}
+            onChange={(event) => onSearchChange(event.target.value)}
             placeholder="Search by filename or path"
             aria-label="Search images"
             disabled={disabled}
@@ -140,7 +147,11 @@ export function FilterBar({
           </SelectContent>
         </Select>
         <div className="flex items-center text-sm text-muted-foreground lg:justify-end lg:pl-2">
-          {loading ? "Scanning…" : `${visibleCount} / ${totalCount} images`}
+          {loading
+            ? "Scanning…"
+            : refreshing
+              ? `Refreshing… ${visibleCount} / ${totalCount} images`
+              : `${visibleCount} / ${totalCount} images`}
         </div>
       </div>
     </section>

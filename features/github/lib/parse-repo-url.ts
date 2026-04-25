@@ -1,4 +1,4 @@
-import type { ParsedGithubUrl } from "@/types/gh";
+import type { ParsedGithubUrl } from "@/features/github/types";
 
 function normalizeGithubPathname(pathname: string): string[] {
   return pathname
