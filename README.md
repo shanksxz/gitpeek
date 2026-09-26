@@ -14,6 +14,7 @@ Quality checks:
 
 ```bash
 pnpm lint
+pnpm fmt:check
 pnpm typecheck
 pnpm check
 pnpm build
@@ -25,10 +26,13 @@ Open `http://localhost:3000` after starting the dev server.
 
 - Next.js App Router
 - React 19
+- TypeScript 7
 - TanStack Query
 - TanStack Virtual
 - Radix/shadcn UI primitives
 - Tailwind CSS 4
+- Oxlint
+- Oxfmt
 
 ## Project Structure
 

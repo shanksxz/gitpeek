@@ -33,7 +33,7 @@ export function useDebouncedQuerySearch({
     }, SEARCH_URL_DEBOUNCE_MS);
 
     return () => window.clearTimeout(timeoutId);
-  }, [commitSearch, search, searchInput]);
+  }, [search, searchInput]);
 
   return {
     deferredSearch,

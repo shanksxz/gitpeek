@@ -2,11 +2,11 @@ import { useMemo } from "react";
 
 import { useQuery } from "@tanstack/react-query";
 
+import { getFolderPath, getExtension, isImagePath } from "@/features/gallery/lib/image-utils";
 import type { RepoImage } from "@/features/gallery/types";
 import { fetchGithubTree, RepoTreeError } from "@/features/github/lib/fetch-repo-tree";
 import { getRawUrl } from "@/features/github/lib/get-raw-url";
 import type { GithubTreeItem, ParsedGithubUrl } from "@/features/github/types";
-import { getFolderPath, getExtension, isImagePath } from "@/features/gallery/lib/image-utils";
 
 function mapTreeToImages(
   owner: string,
@@ -57,6 +57,6 @@ export function useRepoTree(repo: ParsedGithubUrl | null) {
   return {
     ...query,
     images,
-    error: query.error as RepoTreeError | null,
+    error: query.error instanceof RepoTreeError ? query.error : null,
   };
 }

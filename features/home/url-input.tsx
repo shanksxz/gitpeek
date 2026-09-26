@@ -1,25 +1,25 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { useForm, type Resolver } from "react-hook-form";
+
+import { useRouter } from "next/navigation";
+
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { ArrowRight } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { parseGithubRepoUrl } from "@/features/github/lib/parse-repo-url";
-import { useRouter } from "next/navigation";
 
 const urlSchema = z.object({
-  url: z.preprocess(
-    (val) => (val == null ? "" : String(val)),
-    z
-      .string()
-      .min(1, "Please enter a GitHub repository URL")
-      .refine((val) => parseGithubRepoUrl(val) !== null, {
-        message: "Use owner/repo, https://github.com/owner/repo, or owner/repo@branch.",
-      }),
-  ),
+  url: z
+    .string()
+    .min(1, "Please enter a GitHub repository URL")
+    .refine((val) => parseGithubRepoUrl(val) !== null, {
+      message: "Use owner/repo, https://github.com/owner/repo, or owner/repo@branch.",
+    }),
 });
 
 type UrlFormValues = { url: string };
@@ -34,7 +34,7 @@ export function UrlInput() {
     handleSubmit,
     formState: { errors },
   } = useForm<UrlFormValues>({
-    resolver: zodResolver(urlSchema) as Resolver<UrlFormValues>,
+    resolver: zodResolver(urlSchema),
     defaultValues: {
       url: "",
     },

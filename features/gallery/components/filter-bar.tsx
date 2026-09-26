@@ -1,7 +1,8 @@
 "use client";
 
-import { Search } from "lucide-react";
 import type { Dispatch, SetStateAction } from "react";
+
+import { Search } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,8 +14,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { cn } from "@/lib/utils";
 import { imageTypeFilters, imageSortOptions } from "@/features/gallery/lib/filter-parsers";
+import { cn } from "@/lib/utils";
 
 type ImageTypeFilter = (typeof imageTypeFilters)[number];
 type ImageSort = (typeof imageSortOptions)[number];
@@ -98,9 +99,10 @@ export function FilterBar({
         })}
       </div>
       <div className="grid gap-3 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,0.85fr)_minmax(0,0.85fr)_auto] lg:items-center">
-        <label className="relative block min-w-0">
+        <label htmlFor="gallery-search" className="relative block min-w-0">
           <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
+            id="gallery-search"
             value={searchValue}
             onChange={(event) => onSearchChange(event.target.value)}
             placeholder="Search by filename or path"
@@ -130,7 +132,10 @@ export function FilterBar({
         </Select>
         <Select
           value={filters.sort}
-          onValueChange={(sort) => setFilters({ sort: sort as ImageSort })}
+          onValueChange={(sort) => {
+            const nextSort = imageSortOptions.find((option) => option === sort);
+            if (nextSort) setFilters({ sort: nextSort });
+          }}
           disabled={disabled}
         >
           <SelectTrigger aria-label="Sort images" className={selectTriggerClass}>

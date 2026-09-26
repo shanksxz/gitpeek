@@ -1,9 +1,11 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
+import Image from "next/image";
+
 import { useHotkeys } from "@tanstack/react-hotkeys";
 import axios from "axios";
-import Image from "next/image";
-import { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight, Download, Loader2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -91,18 +93,16 @@ export function ImageLightboxDialog({ image, images, onClose, onPrevious, onNext
 
         <div className="relative min-h-[min(55vh,560px)] w-full flex-1 bg-black/20 md:min-h-[min(60vh,640px)]">
           {imageState !== ImageState.error ? (
-            <>
-              <Image
-                src={image.rawUrl}
-                alt={image.name}
-                fill
-                sizes="(max-width: 896px) 100vw, 896px"
-                className="object-contain"
-                priority
-                onLoad={() => setImageState(ImageState.ready)}
-                onError={() => setImageState(ImageState.error)}
-              />
-            </>
+            <Image
+              src={image.rawUrl}
+              alt={image.name}
+              fill
+              sizes="(max-width: 896px) 100vw, 896px"
+              className="object-contain"
+              priority
+              onLoad={() => setImageState(ImageState.ready)}
+              onError={() => setImageState(ImageState.error)}
+            />
           ) : imageState === ImageState.error ? (
             <div className="flex h-full min-h-[12rem] items-center justify-center text-muted-foreground">
               <span>Unable to load image</span>
@@ -127,7 +127,7 @@ export function ImageLightboxDialog({ image, images, onClose, onPrevious, onNext
               disabled={!hasPrevious}
               aria-label="Previous image"
             >
-              <ChevronLeft className="w-4 h-4" />
+              <ChevronLeft className="h-4 w-4" />
             </Button>
             <span className="text-sm text-muted-foreground">
               {currentIndex + 1} / {images.length}
@@ -139,7 +139,7 @@ export function ImageLightboxDialog({ image, images, onClose, onPrevious, onNext
               disabled={!hasNext}
               aria-label="Next image"
             >
-              <ChevronRight className="w-4 h-4" />
+              <ChevronRight className="h-4 w-4" />
             </Button>
           </div>
 

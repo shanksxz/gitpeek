@@ -1,18 +1,19 @@
 "use client";
 
 import { useEffect, useState } from "react";
+
 import { useQueryStates } from "nuqs";
 
-import { RepoTreeError } from "@/features/github/lib/fetch-repo-tree";
 import { useDebouncedQuerySearch } from "@/features/gallery/hooks/use-debounced-query-search";
 import { useImageFilter } from "@/features/gallery/hooks/use-image-filter";
 import { useRepoTree } from "@/features/gallery/hooks/use-repo-tree";
 import { filterParsers } from "@/features/gallery/lib/filter-parsers";
+import { RepoTreeError } from "@/features/github/lib/fetch-repo-tree";
 import type { ParsedGithubUrl } from "@/features/github/types";
 
 import { FilterBar } from "./filter-bar";
-import { GalleryLightbox } from "./gallery-lightbox";
 import { EmptyState, ErrorBanner } from "./gallery-feedback";
+import { GalleryLightbox } from "./gallery-lightbox";
 import { VirtualGrid } from "./virtual-grid";
 
 export function Gallery({ repo }: { repo: ParsedGithubUrl }) {

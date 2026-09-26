@@ -1,8 +1,11 @@
 "use client";
 
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+
 import { useVirtualizer } from "@tanstack/react-virtual";
+
 import type { RepoImage } from "@/features/gallery/types";
+
 import { ImageCard, SkeletonCard } from "./image-card";
 
 const GRID_COL_GAP_PX = 16;
@@ -72,7 +75,7 @@ export function VirtualGrid({ images, isLoading, onOpen }: VirtualGridProps) {
   const handleOpen = useCallback((index: number) => onOpen(index), [onOpen]);
 
   return (
-    <div ref={parentRef} className="flex-1 min-h-0 overflow-auto rounded-xl bg-muted/20 p-2 md:p-3">
+    <div ref={parentRef} className="min-h-0 flex-1 overflow-auto rounded-xl bg-muted/20 p-2 md:p-3">
       <div className="relative" style={{ height: `${rowVirtualizer.getTotalSize()}px` }}>
         {rowVirtualizer.getVirtualItems().map((virtualRow) => {
           const startIndex = virtualRow.index * columnCount;

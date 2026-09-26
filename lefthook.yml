@@ -2,6 +2,10 @@ pre-commit:
   parallel: true
   commands:
     lint:
-      run: pnpm run lint {staged_files}
+      glob: "*.{js,jsx,ts,tsx,mjs,cjs}"
+      run: pnpm exec oxlint {staged_files}
     fmt-check:
-      run: pnpm run fmt:check {staged_files}
+      glob: "*.{js,jsx,ts,tsx,mjs,cjs,json,css,md,yml,yaml}"
+      run: pnpm exec oxfmt --check {staged_files}
+    typecheck:
+      run: pnpm typecheck

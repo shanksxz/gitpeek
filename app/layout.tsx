@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
-import { Analytics } from "@vercel/analytics/next";
 import { Geist_Mono } from "next/font/google";
-import "./globals.css";
-import { Header } from "@/components/layouts/app-header";
-import { AppProviders } from "@/providers/app-providers";
-import { siteConfig } from "@/config/site";
+
+import { Analytics } from "@vercel/analytics/next";
+
 import AppFooter from "@/components/layouts/app-footer";
+import { Header } from "@/components/layouts/app-header";
+import { siteConfig } from "@/config/site";
+import { AppProviders } from "@/providers/app-providers";
+
+import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
@@ -44,7 +47,7 @@ export default function RootLayout({
         <AppProviders>
           <div className="flex min-h-dvh flex-col items-center">
             <Header />
-            <main className="flex flex-1 overflow-auto w-full">{children}</main>
+            <main className="flex w-full flex-1 overflow-auto">{children}</main>
             <AppFooter />
           </div>
         </AppProviders>

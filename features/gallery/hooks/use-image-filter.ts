@@ -9,24 +9,18 @@ function extensionMatchesFilter(filter: ImageTypeFilter, extension: string): boo
 }
 
 function sortImages(images: RepoImage[], sort: ImageFilterState["sort"]): RepoImage[] {
-  const next = [...images];
   switch (sort) {
     case "path":
-      next.sort((a, b) => a.path.localeCompare(b.path));
-      break;
+      return images.toSorted((a, b) => a.path.localeCompare(b.path));
     case "name":
-      next.sort((a, b) => a.name.localeCompare(b.name));
-      break;
+      return images.toSorted((a, b) => a.name.localeCompare(b.name));
     case "size-desc":
-      next.sort((a, b) => (b.size ?? 0) - (a.size ?? 0));
-      break;
+      return images.toSorted((a, b) => (b.size ?? 0) - (a.size ?? 0));
     case "size-asc":
-      next.sort((a, b) => (a.size ?? 0) - (b.size ?? 0));
-      break;
+      return images.toSorted((a, b) => (a.size ?? 0) - (b.size ?? 0));
     default:
-      break;
+      return images;
   }
-  return next;
 }
 
 export function useImageFilter(images: RepoImage[], filters: ImageFilterState) {
@@ -49,7 +43,7 @@ export function useImageFilter(images: RepoImage[], filters: ImageFilterState) {
     }
 
     const filteredImages = sortImages(filtered, sort);
-    const folders = Array.from(folderSet).sort();
+    const folders = Array.from(folderSet).toSorted();
 
     return { filteredImages, folders };
   }, [folder, images, search, sort, type]);
