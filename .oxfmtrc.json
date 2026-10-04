@@ -1,26 +1,6 @@
 {
   "$schema": "./node_modules/oxfmt/configuration_schema.json",
-  "printWidth": 100,
-  "tabWidth": 2,
-  "useTabs": false,
-  "semi": true,
-  "singleQuote": false,
-  "jsxSingleQuote": false,
-  "trailingComma": "all",
-  "bracketSpacing": true,
-  "arrowParens": "always",
-  "endOfLine": "lf",
-  "insertFinalNewline": true,
-  "ignorePatterns": [
-    "node_modules",
-    ".next",
-    "out",
-    "build",
-    "coverage",
-    "pnpm-lock.yaml",
-    "next-env.d.ts",
-    ".agents"
-  ],
+  "ignorePatterns": ["pnpm-lock.yaml", ".agents"],
   "sortImports": {
     "ignoreCase": true,
     "newlinesBetween": true,
