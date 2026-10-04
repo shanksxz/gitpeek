@@ -23,10 +23,19 @@ function columnCountForWidth(containerWidthPx: number): number {
 
 interface VirtualGridProps {
   images: RepoImage[];
+  isSelecting: boolean;
+  selectedIds: ReadonlySet<string>;
   onOpen: (image: RepoImage) => void;
+  onToggle: (image: RepoImage, options: { range: boolean }) => void;
 }
 
-export function VirtualGrid({ images, onOpen }: VirtualGridProps) {
+export function VirtualGrid({
+  images,
+  isSelecting,
+  selectedIds,
+  onOpen,
+  onToggle,
+}: VirtualGridProps) {
   const parentRef = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(0);
 
@@ -78,7 +87,14 @@ export function VirtualGrid({ images, onOpen }: VirtualGridProps) {
               }}
             >
               {images.slice(startIndex, startIndex + columnCount).map((image) => (
-                <ImageCard key={image.id} image={image} onOpen={() => onOpen(image)} />
+                <ImageCard
+                  key={image.id}
+                  image={image}
+                  isSelecting={isSelecting}
+                  isSelected={selectedIds.has(image.id)}
+                  onOpen={() => onOpen(image)}
+                  onToggle={(options) => onToggle(image, options)}
+                />
               ))}
             </div>
           );

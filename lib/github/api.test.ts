@@ -45,7 +45,7 @@ describe("When fetching a repo tree", () => {
         repo: "r",
         branch: "main",
         truncated: false,
-        items: [{ path: "logo.png", type: "blob", size: 10 }],
+        items: [{ path: "logo.png", mode: "100644", type: "blob", size: 10 }],
       });
     });
   });

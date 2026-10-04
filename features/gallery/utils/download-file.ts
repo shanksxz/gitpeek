@@ -1,9 +1,8 @@
-/** Fetches a file and saves it through a temporary object URL. */
-export async function downloadFile(url: string, fileName: string): Promise<void> {
-  const response = await fetch(url);
-  if (!response.ok) throw new Error(`Download failed with status ${response.status}`);
+import type { RepoImage } from "@/features/gallery/types";
 
-  const objectUrl = URL.createObjectURL(await response.blob());
+/** Saves a blob through a temporary object URL. */
+export function saveBlob(blob: Blob, fileName: string): void {
+  const objectUrl = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = objectUrl;
   link.download = fileName;
@@ -13,4 +12,15 @@ export async function downloadFile(url: string, fileName: string): Promise<void>
   link.remove();
   // Revoking synchronously can cancel the download in some browsers.
   setTimeout(() => URL.revokeObjectURL(objectUrl), 250);
+}
+
+/** Downloads one image, falling back to opening it in a new tab if the fetch is blocked. */
+export async function downloadImage(image: RepoImage): Promise<void> {
+  try {
+    const response = await fetch(image.rawUrl);
+    if (!response.ok) throw new Error(`Download failed with status ${response.status}`);
+    saveBlob(await response.blob(), image.name);
+  } catch {
+    window.open(image.rawUrl, "_blank", "noopener,noreferrer");
+  }
 }

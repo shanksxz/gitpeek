@@ -15,11 +15,14 @@ interface RepoImages {
 
 const NO_IMAGES: RepoImage[] = [];
 
+/** Symlinks are blobs too, but their raw content is the link target, not an image. */
+const SYMLINK_MODE = "120000";
+
 function toRepoImages({ owner, repo, branch, items, truncated }: RepoTree): RepoImages {
   const images: RepoImage[] = [];
 
   for (const item of items) {
-    if (item.type !== "blob") continue;
+    if (item.type !== "blob" || item.mode === SYMLINK_MODE) continue;
 
     const imageType = getImageType(item.path);
     if (!imageType) continue;
