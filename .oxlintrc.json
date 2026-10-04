@@ -1,6 +1,7 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
   "plugins": ["eslint", "typescript", "unicorn", "oxc", "import", "react", "nextjs", "jsx-a11y"],
+  "jsPlugins": ["@shadcn/lint"],
   "categories": {
     "correctness": "error",
     "suspicious": "warn"
@@ -9,7 +10,15 @@
     "browser": true,
     "node": true
   },
-  "ignorePatterns": ["node_modules", ".next", "out", "build", "coverage", "next-env.d.ts"],
+  "ignorePatterns": [
+    "node_modules",
+    ".next",
+    "out",
+    "build",
+    "coverage",
+    "next-env.d.ts",
+    ".agents"
+  ],
   "options": {
     "typeAware": true,
     "typeCheck": true
@@ -17,7 +26,12 @@
   "settings": {
     "react": {
       "version": "19.3.0",
-      "linkComponents": [{ "name": "Link", "linkAttribute": "href" }]
+      "linkComponents": [
+        {
+          "name": "Link",
+          "linkAttribute": "href"
+        }
+      ]
     },
     "jsx-a11y": {
       "components": {
@@ -28,7 +42,13 @@
   "rules": {
     "eslint/no-console": "warn",
     "eslint/no-debugger": "error",
-    "eslint/eqeqeq": ["error", "always", { "null": "ignore" }],
+    "eslint/eqeqeq": [
+      "error",
+      "always",
+      {
+        "null": "ignore"
+      }
+    ],
     "typescript/no-explicit-any": "error",
     "typescript/no-unused-vars": [
       "error",
@@ -39,8 +59,13 @@
       }
     ],
     "import/no-cycle": "error",
-    "import/no-unassigned-import": ["warn", { "allow": ["**/*.css"] }],
-    "typescript/consistent-return": "off",
+    "import/no-unassigned-import": [
+      "warn",
+      {
+        "allow": ["**/*.css"]
+      }
+    ],
+    "typescript/consistent-return": "warn",
     "typescript/no-floating-promises": "error",
     "typescript/no-misused-promises": [
       "error",
@@ -51,7 +76,63 @@
       }
     ],
     "typescript/await-thenable": "error",
+    "typescript/no-unsafe-enum-comparison": "warn",
+    "typescript/no-unsafe-type-assertion": "warn",
     "react/self-closing-comp": "error",
-    "react/jsx-no-useless-fragment": "warn"
-  }
+    "react/jsx-no-useless-fragment": "warn",
+    "react/react-in-jsx-scope": "off",
+    "react/set-state-in-effect": "warn",
+    "react/exhaustive-effect-dependencies": "warn",
+    "react/incompatible-library": "warn"
+  },
+  "overrides": [
+    {
+      "files": ["components/**", "config/**", "lib/**", "providers/**"],
+      "rules": {
+        "eslint/no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": ["@/features/**", "@/app/**"],
+                "message": "Shared code must not depend on features or routes. Move the shared piece into lib/, components/ or config/."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["features/gallery/**"],
+      "rules": {
+        "eslint/no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": ["@/features/home/**", "@/app/**"],
+                "message": "Features must not import other features or routes. Compose them in app/."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["features/home/**"],
+      "rules": {
+        "eslint/no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": ["@/features/gallery/**", "@/app/**"],
+                "message": "Features must not import other features or routes. Compose them in app/."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
 }

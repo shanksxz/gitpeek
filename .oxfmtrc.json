@@ -18,7 +18,8 @@
     "build",
     "coverage",
     "pnpm-lock.yaml",
-    "next-env.d.ts"
+    "next-env.d.ts",
+    ".agents"
   ],
   "sortImports": {
     "ignoreCase": true,
