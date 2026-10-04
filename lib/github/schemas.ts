@@ -8,6 +8,8 @@ export const githubRepoSchema = z.object({
 
 export const githubTreeItemSchema = z.object({
   path: z.string(),
+  /** Git file mode, e.g. `100644` for a file or `120000` for a symlink. */
+  mode: z.string(),
   type: z.enum(["blob", "tree", "commit"]),
   size: z.number().optional(),
 });

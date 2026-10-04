@@ -5,6 +5,7 @@ import { Analytics } from "@vercel/analytics/next";
 
 import { AppFooter } from "@/components/layouts/app-footer";
 import { AppHeader } from "@/components/layouts/app-header";
+import { Toaster } from "@/components/ui/sonner";
 import { siteConfig } from "@/config/site";
 import { AppProviders } from "@/providers/app-providers";
 
@@ -39,6 +40,7 @@ export default function RootLayout({
             <main className="flex w-full flex-1 overflow-auto">{children}</main>
             <AppFooter />
           </div>
+          <Toaster />
         </AppProviders>
         <Analytics />
       </body>

@@ -1,23 +1,8 @@
 import { describe, expect, it } from "vitest";
 
+import { makeImage } from "@/features/gallery/testing/make-image";
 import type { GalleryFilters, RepoImage } from "@/features/gallery/types";
 import { filterImages, listFolders } from "@/features/gallery/utils/filter-images";
-import { getFileName, getFolderPath, getImageType } from "@/features/gallery/utils/image-path";
-
-function makeImage(path: string, size?: number): RepoImage {
-  const imageType = getImageType(path);
-  if (!imageType) throw new Error(`Test fixture is not an image: ${path}`);
-
-  return {
-    ...imageType,
-    id: path,
-    path,
-    name: getFileName(path),
-    folder: getFolderPath(path),
-    size,
-    rawUrl: `https://example.com/${path}`,
-  };
-}
 
 const IMAGES = [
   makeImage("docs/b-diagram.svg", 300),

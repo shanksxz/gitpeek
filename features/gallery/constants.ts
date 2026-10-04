@@ -16,3 +16,10 @@ export const SORT_OPTIONS = [
   { value: "size-desc", label: "Sort: Size ↓" },
   { value: "size-asc", label: "Sort: Size ↑" },
 ] as const;
+
+/** Parallel downloads when building a zip. */
+export const ZIP_CONCURRENCY = 6;
+/** Ask for confirmation above this size. */
+export const ZIP_WARN_BYTES = 250 * 1024 ** 2;
+/** The zip is built in memory, so refuse anything larger. */
+export const ZIP_MAX_BYTES = 1024 ** 3;

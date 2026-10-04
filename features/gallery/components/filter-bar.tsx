@@ -1,6 +1,6 @@
 "use client";
 
-import { Search } from "lucide-react";
+import { CheckSquare, Download, Search } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -36,6 +36,10 @@ interface FilterBarProps {
   folders: string[];
   visibleCount: number;
   totalCount: number;
+  isSelecting: boolean;
+  isDownloading: boolean;
+  onStartSelecting: () => void;
+  onDownloadAll: () => void;
 }
 
 export function FilterBar({
@@ -46,6 +50,10 @@ export function FilterBar({
   folders,
   visibleCount,
   totalCount,
+  isSelecting,
+  isDownloading,
+  onStartSelecting,
+  onDownloadAll,
 }: FilterBarProps) {
   const countLabel = `${visibleCount} / ${totalCount} images`;
 
@@ -68,6 +76,30 @@ export function FilterBar({
             </Button>
           );
         })}
+        <div className="ml-auto flex items-center gap-1.5">
+          {isSelecting ? null : (
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              disabled={loading || visibleCount === 0}
+              onClick={onStartSelecting}
+            >
+              <CheckSquare data-icon="inline-start" />
+              Select
+            </Button>
+          )}
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            disabled={loading || isDownloading || visibleCount === 0}
+            onClick={onDownloadAll}
+          >
+            <Download data-icon="inline-start" />
+            Download all {visibleCount}
+          </Button>
+        </div>
       </div>
       <div className="grid gap-3 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,0.85fr)_minmax(0,0.85fr)_auto] lg:items-center">
         <label htmlFor="gallery-search" className="relative block min-w-0">
