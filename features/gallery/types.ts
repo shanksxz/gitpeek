@@ -1,30 +1,26 @@
-export interface RepoImage {
+import type { IMAGE_FORMATS, SORT_OPTIONS } from "@/features/gallery/constants";
+
+export type ImageFormat = (typeof IMAGE_FORMATS)[number]["value"];
+export type ImageExtension = (typeof IMAGE_FORMATS)[number]["extensions"][number];
+export type ImageSort = (typeof SORT_OPTIONS)[number]["value"];
+
+export interface ImageType {
+  format: ImageFormat;
+  extension: ImageExtension;
+}
+
+export interface RepoImage extends ImageType {
+  /** The file path, which is unique within a tree. */
   id: string;
   path: string;
   name: string;
   folder: string;
-  extension: string;
   size?: number;
-  sha: string;
   rawUrl: string;
 }
 
-export type ImageTypeFilter =
-  | "all"
-  | "png"
-  | "jpg"
-  | "jpeg"
-  | "gif"
-  | "svg"
-  | "webp"
-  | "avif"
-  | "bmp"
-  | "ico";
-
-export type ImageSort = "path" | "name" | "size-desc" | "size-asc";
-
-export interface ImageFilterState {
-  type: ImageTypeFilter;
+export interface GalleryFilters {
+  format: ImageFormat | "all";
   folder: string;
   search: string;
   sort: ImageSort;

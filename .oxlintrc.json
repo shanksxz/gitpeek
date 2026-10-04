@@ -1,6 +1,129 @@
 {
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["eslint", "typescript", "unicorn", "oxc", "import", "react", "nextjs", "jsx-a11y"],
+  "jsPlugins": ["@shadcn/lint"],
+  "categories": {
+    "correctness": "error",
+    "suspicious": "warn"
+  },
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "options": {
+    "typeAware": true,
+    "typeCheck": false
+  },
+  "settings": {
+    "react": {
+      "version": "19.3.0",
+      "linkComponents": [
+        {
+          "name": "Link",
+          "linkAttribute": "href"
+        }
+      ]
+    },
+    "jsx-a11y": {
+      "components": {
+        "Link": "a"
+      }
+    }
+  },
   "rules": {
-    "no-console": "warn",
-    "no-debugger": "warn"
-  }
+    "eslint/no-console": "warn",
+    "eslint/eqeqeq": [
+      "error",
+      "always",
+      {
+        "null": "ignore"
+      }
+    ],
+    "typescript/no-explicit-any": "error",
+    "typescript/no-unused-vars": [
+      "error",
+      {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_",
+        "caughtErrorsIgnorePattern": "^_"
+      }
+    ],
+    "import/no-cycle": "error",
+    "import/no-unassigned-import": [
+      "warn",
+      {
+        "allow": ["**/*.css"]
+      }
+    ],
+    "typescript/consistent-return": "warn",
+    "typescript/no-misused-promises": [
+      "error",
+      {
+        "checksVoidReturn": {
+          "attributes": false
+        }
+      }
+    ],
+    "typescript/no-unsafe-enum-comparison": "warn",
+    "typescript/no-unsafe-type-assertion": "warn",
+    "react/self-closing-comp": "error",
+    "react/jsx-no-useless-fragment": "warn",
+    "react/react-in-jsx-scope": "off",
+    "react/set-state-in-effect": "warn",
+    "react/exhaustive-effect-dependencies": "warn",
+    "react/incompatible-library": "warn",
+    "shadcn/no-raw-colors": "error",
+    "shadcn/no-unknown-classes": "error",
+    "shadcn/require-static-classes": "error"
+  },
+  "overrides": [
+    {
+      "files": ["components/**", "config/**", "lib/**", "providers/**"],
+      "rules": {
+        "eslint/no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": ["@/features/**", "@/app/**"],
+                "message": "Shared code must not depend on features or routes. Move the shared piece into lib/, components/ or config/."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["features/gallery/**"],
+      "rules": {
+        "eslint/no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": ["@/features/home/**", "@/app/**"],
+                "message": "Features must not import other features or routes. Compose them in app/."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["features/home/**"],
+      "rules": {
+        "eslint/no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": ["@/features/gallery/**", "@/app/**"],
+                "message": "Features must not import other features or routes. Compose them in app/."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
 }

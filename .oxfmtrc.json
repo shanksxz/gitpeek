@@ -1,4 +1,33 @@
 {
   "$schema": "./node_modules/oxfmt/configuration_schema.json",
-  "ignorePatterns": []
+  "ignorePatterns": ["pnpm-lock.yaml", ".agents"],
+  "sortImports": {
+    "ignoreCase": true,
+    "newlinesBetween": true,
+    "sortSideEffects": true,
+    "internalPattern": ["@/"],
+    "customGroups": [
+      {
+        "groupName": "react",
+        "elementNamePattern": ["react", "react-dom", "react-dom/**"]
+      },
+      {
+        "groupName": "next",
+        "elementNamePattern": ["next", "next/**"]
+      }
+    ],
+    "groups": [
+      "react",
+      "next",
+      ["builtin", "external"],
+      ["internal", "subpath"],
+      ["parent", "sibling", "index"],
+      ["style", "side_effect_style"],
+      "unknown"
+    ]
+  },
+  "sortTailwindcss": {
+    "stylesheet": "app/globals.css",
+    "functions": ["cn", "cva", "clsx"]
+  }
 }

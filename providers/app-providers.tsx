@@ -1,8 +1,9 @@
 "use client";
 
+import { useState } from "react";
+
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
-import { useState } from "react";
 
 import { ThemeProvider } from "./theme-provider";
 

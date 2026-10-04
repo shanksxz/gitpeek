@@ -19,7 +19,7 @@
     "utils": "@/lib/utils",
     "ui": "@/components/ui",
     "lib": "@/lib",
-    "hooks": "@/features/gallery/hooks"
+    "hooks": "@/hooks"
   },
   "registries": {
     "@magicui": "https://magicui.design/r/{name}"
