@@ -32,7 +32,7 @@ export function GalleryHeader({
           <span className="text-muted-foreground">/</span>
           <span>{repo.repo}</span>
         </h1>
-        <span className="rounded-full border border-red-500/25 bg-red-500/10 px-2.5 py-0.5 text-xs font-medium text-red-600 dark:text-red-300">
+        <span className="rounded-full border border-brand/25 bg-brand/10 px-2.5 py-0.5 text-xs font-medium text-brand">
           {branchLabel}
         </span>
       </div>

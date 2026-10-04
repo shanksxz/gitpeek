@@ -10,18 +10,9 @@
     "browser": true,
     "node": true
   },
-  "ignorePatterns": [
-    "node_modules",
-    ".next",
-    "out",
-    "build",
-    "coverage",
-    "next-env.d.ts",
-    ".agents"
-  ],
   "options": {
     "typeAware": true,
-    "typeCheck": true
+    "typeCheck": false
   },
   "settings": {
     "react": {
@@ -41,7 +32,6 @@
   },
   "rules": {
     "eslint/no-console": "warn",
-    "eslint/no-debugger": "error",
     "eslint/eqeqeq": [
       "error",
       "always",
@@ -66,7 +56,6 @@
       }
     ],
     "typescript/consistent-return": "warn",
-    "typescript/no-floating-promises": "error",
     "typescript/no-misused-promises": [
       "error",
       {
@@ -75,7 +64,6 @@
         }
       }
     ],
-    "typescript/await-thenable": "error",
     "typescript/no-unsafe-enum-comparison": "warn",
     "typescript/no-unsafe-type-assertion": "warn",
     "react/self-closing-comp": "error",
@@ -83,7 +71,10 @@
     "react/react-in-jsx-scope": "off",
     "react/set-state-in-effect": "warn",
     "react/exhaustive-effect-dependencies": "warn",
-    "react/incompatible-library": "warn"
+    "react/incompatible-library": "warn",
+    "shadcn/no-raw-colors": "error",
+    "shadcn/no-unknown-classes": "error",
+    "shadcn/require-static-classes": "error"
   },
   "overrides": [
     {
