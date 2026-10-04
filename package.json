@@ -6,13 +6,15 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "oxlint",
-    "lint:fix": "oxlint --fix",
+    "lint": "next typegen && oxlint",
+    "lint:fix": "next typegen && oxlint --fix",
     "fmt": "oxfmt",
     "fmt:check": "oxfmt --check",
-    "typecheck": "tsc --noEmit",
-    "check": "pnpm lint && pnpm fmt:check && pnpm typecheck",
-    "fix": "pnpm lint:fix && pnpm fmt"
+    "typecheck": "next typegen && tsc --noEmit",
+    "check": "pnpm lint && pnpm fmt:check && pnpm typecheck && pnpm test",
+    "fix": "pnpm lint:fix && pnpm fmt",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",
@@ -21,7 +23,6 @@
     "@tanstack/react-virtual": "^3.14.13",
     "@vercel/analytics": "^2.0.1",
     "@vercel/speed-insights": "^2.0.0",
-    "axios": "^1.20.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^1.48.0",
@@ -39,6 +40,7 @@
     "zod": "^4.6.5"
   },
   "devDependencies": {
+    "@shadcn/lint": "^0.2.0",
     "@tailwindcss/postcss": "^4.3.3",
     "@types/node": "^24.19.0",
     "@types/react": "^19.3.0",
@@ -48,6 +50,7 @@
     "oxlint": "^1.85.0",
     "oxlint-tsgolint": "7.0.2003",
     "tailwindcss": "^4.3.3",
-    "typescript": "7.0.2"
+    "typescript": "7.0.2",
+    "vitest": "^5.0.3"
   }
 }

@@ -1,7 +1,5 @@
 "use client";
 
-import type { Dispatch, SetStateAction } from "react";
-
 import { Search } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -14,86 +12,59 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { imageTypeFilters, imageSortOptions } from "@/features/gallery/lib/filter-parsers";
+import { IMAGE_FORMATS, SORT_OPTIONS } from "@/features/gallery/constants";
+import type { GalleryFilters, ImageSort } from "@/features/gallery/types";
 import { cn } from "@/lib/utils";
 
-type ImageTypeFilter = (typeof imageTypeFilters)[number];
-type ImageSort = (typeof imageSortOptions)[number];
-
-interface GalleryFilters {
-  type: ImageTypeFilter;
-  folder: string;
-  search: string;
-  sort: ImageSort;
-}
-
-const TYPE_FILTERS: Array<{ label: string; value: ImageTypeFilter }> = [
-  { label: "All", value: "all" },
-  { label: "PNG", value: "png" },
-  { label: "JPG", value: "jpg" },
-  { label: "JPEG", value: "jpeg" },
-  { label: "GIF", value: "gif" },
-  { label: "SVG", value: "svg" },
-  { label: "WebP", value: "webp" },
-  { label: "AVIF", value: "avif" },
-  { label: "BMP", value: "bmp" },
-  { label: "ICO", value: "ico" },
-];
-
-const SORT_OPTIONS: Array<{
-  value: ImageSort;
-  label: string;
-}> = [
-  { value: "path", label: "Sort: Path" },
-  { value: "name", label: "Sort: Name" },
-  { value: "size-desc", label: "Sort: Size ↓" },
-  { value: "size-asc", label: "Sort: Size ↑" },
+const FORMAT_FILTERS: ReadonlyArray<{ value: GalleryFilters["format"]; label: string }> = [
+  { value: "all", label: "All" },
+  ...IMAGE_FORMATS,
 ];
 
 const selectTriggerClass =
   "h-10 w-full min-w-0 rounded-lg border-0 bg-muted/60 px-3 text-sm shadow-none focus:ring-2 focus:ring-ring/50 dark:bg-muted/40 [&_svg]:text-muted-foreground";
 
+function isImageSort(value: string): value is ImageSort {
+  return SORT_OPTIONS.some((option) => option.value === value);
+}
+
 interface FilterBarProps {
-  disabled?: boolean;
-  loading?: boolean;
-  refreshing?: boolean;
+  loading: boolean;
+  refreshing: boolean;
   filters: GalleryFilters;
-  searchValue: string;
-  onSearchChange: Dispatch<SetStateAction<string>>;
-  setFilters: (update: Partial<GalleryFilters>) => void;
+  onFiltersChange: (update: Partial<GalleryFilters>) => void;
   folders: string[];
   visibleCount: number;
   totalCount: number;
 }
 
 export function FilterBar({
-  disabled = false,
-  loading = false,
-  refreshing = false,
+  loading,
+  refreshing,
   filters,
-  searchValue,
-  onSearchChange,
-  setFilters,
+  onFiltersChange,
   folders,
   visibleCount,
   totalCount,
 }: FilterBarProps) {
+  const countLabel = `${visibleCount} / ${totalCount} images`;
+
   return (
     <section className="grid gap-5">
       <div className="flex flex-wrap items-center gap-1.5">
-        {TYPE_FILTERS.map((filter) => {
-          const active = filter.value === filters.type;
+        {FORMAT_FILTERS.map(({ value, label }) => {
+          const active = value === filters.format;
           return (
             <Button
-              key={filter.value}
+              key={value}
               type="button"
               variant={active ? "secondary" : "ghost"}
               size="sm"
               className={cn("rounded-full px-3 text-xs font-normal", active && "font-medium")}
-              disabled={disabled}
-              onClick={() => setFilters({ type: filter.value })}
+              disabled={loading}
+              onClick={() => onFiltersChange({ format: value })}
             >
-              {filter.label}
+              {label}
             </Button>
           );
         })}
@@ -103,18 +74,18 @@ export function FilterBar({
           <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             id="gallery-search"
-            value={searchValue}
-            onChange={(event) => onSearchChange(event.target.value)}
+            value={filters.search}
+            onChange={(event) => onFiltersChange({ search: event.target.value })}
             placeholder="Search by filename or path"
             aria-label="Search images"
-            disabled={disabled}
+            disabled={loading}
             className="h-10 rounded-lg border-0 bg-muted/60 pl-10 text-sm dark:bg-muted/40"
           />
         </label>
         <Select
           value={filters.folder}
-          onValueChange={(folder) => setFilters({ folder })}
-          disabled={disabled}
+          onValueChange={(folder) => onFiltersChange({ folder })}
+          disabled={loading}
         >
           <SelectTrigger aria-label="Filter by folder" className={selectTriggerClass}>
             <SelectValue />
@@ -133,10 +104,9 @@ export function FilterBar({
         <Select
           value={filters.sort}
           onValueChange={(sort) => {
-            const nextSort = imageSortOptions.find((option) => option === sort);
-            if (nextSort) setFilters({ sort: nextSort });
+            if (isImageSort(sort)) onFiltersChange({ sort });
           }}
-          disabled={disabled}
+          disabled={loading}
         >
           <SelectTrigger aria-label="Sort images" className={selectTriggerClass}>
             <SelectValue />
@@ -152,11 +122,7 @@ export function FilterBar({
           </SelectContent>
         </Select>
         <div className="flex items-center text-sm text-muted-foreground lg:justify-end lg:pl-2">
-          {loading
-            ? "Scanning…"
-            : refreshing
-              ? `Refreshing… ${visibleCount} / ${totalCount} images`
-              : `${visibleCount} / ${totalCount} images`}
+          {loading ? "Scanning…" : refreshing ? `Refreshing… ${countLabel}` : countLabel}
         </div>
       </div>
     </section>

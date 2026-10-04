@@ -3,8 +3,8 @@ import { Geist_Mono } from "next/font/google";
 
 import { Analytics } from "@vercel/analytics/next";
 
-import AppFooter from "@/components/layouts/app-footer";
-import { Header } from "@/components/layouts/app-header";
+import { AppFooter } from "@/components/layouts/app-footer";
+import { AppHeader } from "@/components/layouts/app-header";
 import { siteConfig } from "@/config/site";
 import { AppProviders } from "@/providers/app-providers";
 
@@ -19,19 +19,10 @@ export const metadata: Metadata = {
   applicationName: siteConfig.name,
 };
 
-const fontSans = Geist_Mono({
+// globals.css maps the sans, serif and mono theme fonts onto this variable.
+const geistMono = Geist_Mono({
   subsets: ["latin"],
-  variable: "--font-sans",
-});
-
-const fontSerif = Geist_Mono({
-  subsets: ["latin"],
-  variable: "--font-serif",
-});
-
-const fontMono = Geist_Mono({
-  subsets: ["latin"],
-  variable: "--font-mono",
+  variable: "--font-geist-mono",
 });
 
 export default function RootLayout({
@@ -40,13 +31,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={`min-h-dvh bg-background text-foreground ${fontSans.variable} ${fontSerif.variable} ${fontMono.variable} antialiased`}
-      >
+    <html lang="en" className={geistMono.variable} suppressHydrationWarning>
+      <body className="min-h-dvh bg-background text-foreground antialiased">
         <AppProviders>
           <div className="flex min-h-dvh flex-col items-center">
-            <Header />
+            <AppHeader />
             <main className="flex w-full flex-1 overflow-auto">{children}</main>
             <AppFooter />
           </div>

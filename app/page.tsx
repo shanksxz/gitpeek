@@ -1,4 +1,4 @@
-import { UrlInput } from "@/features/home/url-input";
+import { RepoUrlForm } from "@/features/home/components/repo-url-form";
 
 export default function Home() {
   return (
@@ -23,7 +23,7 @@ export default function Home() {
           </p>
         </header>
         <div className="mt-10">
-          <UrlInput />
+          <RepoUrlForm />
         </div>
       </div>
     </section>

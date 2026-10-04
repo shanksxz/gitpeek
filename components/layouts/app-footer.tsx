@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export default function AppFooter() {
+export function AppFooter() {
   return (
     <footer className="mt-auto border-t border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-center px-4 sm:px-6 lg:px-8">

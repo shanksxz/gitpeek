@@ -1,16 +1,13 @@
 import { Gallery } from "@/features/gallery/components/gallery";
 
-export default async function Page({
+export default async function GalleryPage({
   params,
   searchParams,
-}: {
-  params: Promise<{ owner: string; repo: string }>;
-  searchParams: Promise<{ branch?: string }>;
-}) {
+}: PageProps<"/gallery/[owner]/[repo]">) {
   const [{ owner, repo }, { branch }] = await Promise.all([params, searchParams]);
-  const sourceUrl = branch
-    ? `https://github.com/${owner}/${repo}/tree/${branch}`
-    : `https://github.com/${owner}/${repo}`;
 
-  return <Gallery repo={{ owner, repo, branch, sourceUrl }} />;
+  // `?branch=a&branch=b` arrives as an array; only a single value is meaningful.
+  return (
+    <Gallery repo={{ owner, repo, branch: typeof branch === "string" ? branch : undefined }} />
+  );
 }

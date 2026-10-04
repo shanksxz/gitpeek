@@ -1,12 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 
 import { useVirtualizer } from "@tanstack/react-virtual";
 
 import type { RepoImage } from "@/features/gallery/types";
 
-import { ImageCard, SkeletonCard } from "./image-card";
+import { ImageCard } from "./image-card";
 
 const GRID_COL_GAP_PX = 16;
 const GRID_ROW_GAP_PX = 24;
@@ -23,56 +23,41 @@ function columnCountForWidth(containerWidthPx: number): number {
 
 interface VirtualGridProps {
   images: RepoImage[];
-  isLoading: boolean;
-  onOpen: (index: number) => void;
+  onOpen: (image: RepoImage) => void;
 }
 
-export function VirtualGrid({ images, isLoading, onOpen }: VirtualGridProps) {
+export function VirtualGrid({ images, onOpen }: VirtualGridProps) {
   const parentRef = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(0);
 
   const columnCount = columnCountForWidth(width);
-
-  const rowCount = columnCount > 0 ? Math.ceil(images.length / columnCount) : 0;
-
+  const rowCount = Math.ceil(images.length / columnCount);
   const tileWidth =
     width > 0 ? (width - (columnCount - 1) * GRID_COL_GAP_PX) / columnCount : TARGET_MIN_TILE_PX;
-  const estimatedRowHeightPx = tileWidth + GRID_ROW_GAP_PX;
 
-  const skeletonRowCount =
-    width > 0 && estimatedRowHeightPx > 0
-      ? Math.ceil((parentRef.current?.clientHeight ?? 600) / estimatedRowHeightPx) + 1
-      : 4;
-
-  // sync before first paint to avoid flash of wrong column count
-  useLayoutEffect(() => {
-    if (parentRef.current) {
-      setWidth(parentRef.current.clientWidth);
-    }
-  }, []);
-
+  // TanStack Virtual returns fresh functions each render; this project does not use the React Compiler.
+  // oxlint-disable-next-line react/incompatible-library
   const rowVirtualizer = useVirtualizer({
-    count: isLoading ? skeletonRowCount : rowCount,
+    count: rowCount,
     getScrollElement: () => parentRef.current,
-    estimateSize: () => estimatedRowHeightPx,
+    estimateSize: () => tileWidth + GRID_ROW_GAP_PX,
     overscan: OVERSCAN,
   });
 
-  useEffect(() => {
+  // ResizeObserver reports the first size before paint, so there is no flash of the wrong column count.
+  useLayoutEffect(() => {
     const element = parentRef.current;
-    if (!element) return;
+    if (!element) return undefined;
 
     const observer = new ResizeObserver(([entry]) => {
+      if (!entry) return;
       setWidth(entry.contentRect.width);
-      // flush stale row measurements after resize
+      // Row heights depend on the width, so drop the old measurements.
       rowVirtualizer.measure();
     });
-
     observer.observe(element);
     return () => observer.disconnect();
   }, [rowVirtualizer]);
-
-  const handleOpen = useCallback((index: number) => onOpen(index), [onOpen]);
 
   return (
     <div ref={parentRef} className="min-h-0 flex-1 overflow-auto rounded-xl bg-muted/20 p-2 md:p-3">
@@ -92,17 +77,9 @@ export function VirtualGrid({ images, isLoading, onOpen }: VirtualGridProps) {
                 paddingBottom: GRID_ROW_GAP_PX,
               }}
             >
-              {isLoading
-                ? Array.from({ length: columnCount }).map((_, i) => <SkeletonCard key={i} />)
-                : images
-                    .slice(startIndex, startIndex + columnCount)
-                    .map((image, i) => (
-                      <ImageCard
-                        key={image.id}
-                        image={image}
-                        onOpen={() => handleOpen(startIndex + i)}
-                      />
-                    ))}
+              {images.slice(startIndex, startIndex + columnCount).map((image) => (
+                <ImageCard key={image.id} image={image} onOpen={() => onOpen(image)} />
+              ))}
             </div>
           );
         })}
